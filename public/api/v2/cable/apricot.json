@@ -1,79 +1,18 @@
 {
-  "id": "apricot",
-  "name": "Apricot",
-  "slug": "apricot",
-  "cable_id": 11972,
-  "length": 11972,
-  "rfs": "2026",
-  "status": "project",
-  "owners": ["NTT", "Chunghwa Telecom", "PLDT", "Google", "Meta"],
-  "supplier": "SubCom",
-  "capacity": {
-    "main_trunk": "211 Tbps (12 fiber pairs × 17.6)",
-    "upgraded": "≈290 Tbps (≈24 Tbps/fiber-pair)"
-  },
-  "url": "https://www.submarinenetworks.com/en/systems/intra-asia/apricot",
-  "notes": "Intra-Asia system with multiple branches; based on space-division multiplexing and reconfigurable optical add-drop multiplexers.",
-  "landing_points": [
-    {"name": "Minami Boso, Japan", "id": "minami-boso-jp"},
-    {"name": "Toucheng, Taiwan", "id": "toucheng-tw"},
-    {"name": "Agat, Guam", "id": "agat-gu"},
-    {"name": "Davao, Philippines", "id": "davao-ph"},
-    {"name": "Baler, Philippines", "id": "baler-ph"},
-    {"name": "Tanjung Pakis, Indonesia", "id": "tanjung-pakis-id"},
-    {"name": "Batam, Indonesia", "id": "batam-id"},
-    {"name": "Tuas, Singapore", "id": "tuas-sg"}
+  "id":"apricot",
+  "name":"Apricot",
+  "length":"11,972 km",
+  "landing_points":[
+    {"id":"agat-guam","name":"Agat, Guam","country":"Guam","is_tbd":null},
+    {"id":"batam-indonesia","name":"Batam, Indonesia","country":"Indonesia","is_tbd":null},
+    {"id":"tanjung-pakis-indonesia","name":"Tanjung Pakis, Indonesia","country":"Indonesia","is_tbd":null},
+    {"id":"minamiboso-japan","name":"Minamiboso, Japan","country":"Japan","is_tbd":null},
+    {"id":"baler-philippines","name":"Baler, Philippines","country":"Philippines","is_tbd":null},
+    {"id":"davao-philippines","name":"Davao, Philippines","country":"Philippines","is_tbd":null},
+    {"id":"tuas-singapore","name":"Tuas, Singapore","country":"Singapore","is_tbd":null},
+    {"id":"toucheng-taiwan","name":"Toucheng, Taiwan","country":"Taiwan","is_tbd":null}
   ],
-  "branches": [
-    {
-      "name": "Main Trunk",
-      "from": "Minami Boso",
-      "to": "Tuas",
-      "length": 8232,
-      "fiber_pairs": 12,
-      "owners": {"NTT":2, "CHT":1, "PLDT":1, "Google":4, "Meta":4}
-    },
-    {
-      "name": "Tanjung Pakis Branch",
-      "from": "Tanjung Pakis",
-      "length": 242,
-      "fiber_pairs": 10,
-      "owners": {"NTT":4, "CHT":2, "Google":2, "Meta":2}
-    },
-    {
-      "name": "Batam Branch",
-      "from": "Batam",
-      "length": 8,
-      "fiber_pairs": 14,
-      "owners": {"NTT":4, "CHT":2, "Google":2, "Meta":6}
-    },
-    {
-      "name": "Davao Branch",
-      "from": "Davao",
-      "length": 181,
-      "fiber_pairs": 4,
-      "owners": {"PLDT":2, "Meta":2}
-    },
-    {
-      "name": "Baler Branch",
-      "from": "Baler",
-      "length": 479,
-      "fiber_pairs": 15,
-      "owners": {"PLDT":2, "Google":6, "Meta":7}
-    },
-    {
-      "name": "Agat Branch",
-      "from": "Agat",
-      "length": 2198,
-      "fiber_pairs": 13,
-      "owners": {"PLDT":1, "Google":6, "Meta":6}
-    },
-    {
-      "name": "Taiwan Branch",
-      "from": "Toucheng",
-      "length": 632,
-      "fiber_pairs": 16,
-      "owners": {"CHT":2, "NTT":2, "PLDT":0.5, "Google":6, "Meta":5.5}
-    }
-  ]
+  "owners":"Chunghwa Telecom, Google, Meta, NTT, PLDT",
+  "suppliers":"SubCom","rfs":"2025 Q4","rfs_year":2025,
+  "is_planned":false,"url":null,"notes":null
 }
