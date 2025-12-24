@@ -4157,13 +4157,6 @@
     },
     {
       "type":"Feature",
-      "properties":{
-        "id":"apricot",
-        "name":"Apricot",
-        "color":"#b63894",
-        "feature_id":"apricot-0",
-        "coordinates":[129.23798072152712,20.059088092174036]
-      },
       "geometry":{
         "type":"MultiLineString",
         "coordinates":[
@@ -4194,16 +4187,12 @@
             [121.80144795065142,24.863504112487785]
           ]
         ]
-      }
+      },
+      "properties": {
+        "color": "#b63894",
+        "slug": "apricot-0"
     },
     {"type":"Feature",
-      "properties":{
-        "id":"apricot",
-        "name":"Apricot",
-        "color":"#939597",
-        "feature_id":"apricot-1",
-        "coordinates":[119.96497042769207,1.1841040607806506]
-      },
       "geometry":{
         "type":"MultiLineString",
         "coordinates":[
@@ -4259,8 +4248,11 @@
             [104.0166370000003,1.066798000000349]
           ]
         ]
-      }
-    }
+      },
+      "properties": {
+        "color": "#939597",
+        "slug": "apricot-1"
+    },
     {
       "type": "Feature",
       "geometry": {
