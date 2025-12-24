@@ -43615,8 +43615,10 @@
            ]
          },
          "properties": {
-         "color": "2e64d1",
-         "slug": "southeast-asia-japan-cable-2-sjc2"
+           "color": "2e64d1",
+           "slug": "southeast-asia-japan-cable-2-sjc2"
+          }
+        }
       }
     },
     {
