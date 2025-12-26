@@ -6,10 +6,14 @@
   SubmarineCable.Map = (function() {
     class Map {
       landingIcon() {
-        return {
-          url: '/assets/images/marker.png',
-          size: new google.maps.Size(10, 10),
-          anchor: new google.maps.Point(5, 5)
+        return { 
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: '#ffffff',
+          fillOpacity: 1.0,
+          strokeColor: '#404040',
+          strokeOpacity: 1.0,
+          strokeWeight: 1.5
         };
       }
 
@@ -25,6 +29,32 @@
           };
         });
       }
+      
+      cableStrokeStyle(feature) {
+        const slug = feature.getProperty("slug");
+        const color = `#${feature.getProperty("color")}`;
+        const isSelected = this.selectedIds && this.selectedIds.indexOf(slug) >= 0;
+
+        return {
+          strokeColor: isSelected ? "#a81120" : color,
+          strokeOpacity: isSelected ? 1 : 0.1,
+          strokeWeight: 2
+        };
+      }
+
+ 
+      refreshStyles() {
+        if (this.cables) {
+          this.cables.setStyle((feature) => this.cableStrokeStyle(feature));
+        }
+        if (this.landings && this._lastDescForLandings) {
+          this.landings.setStyle((feature) => {
+            const ids = (this._lastDescForLandings || []).map(d => d.landing_point_id);
+            const visible = ids.indexOf(feature.getProperty("id")) >= 0;
+            return { icon: this.landingIcon(), visible };
+          });
+        }
+      }
 
       showLandingPoints() {
         this.landings = new google.maps.Data({
@@ -36,21 +66,23 @@
         });
       }
 
-      selectCable(id, desc, is_map_clicked = false) {
+      
+      selectCable(ids, desc, is_map_clicked = false) {
         this.infoBox.close();
+        this._lastDescForLandings = desc;
+        this.selectedIds = Array.isArray(ids) ? ids.slice() : (ids ? [ids] : []);
+
         this.cables.setStyle((feature) => {
-          if (feature.getProperty("slug") === id) {
-            return {
-              strokeColor: "#a81120",
-              strokeOpacity: 1
-            };
-          } else {
-            return {
-              strokeColor: `#${feature.getProperty("color")}`,
-              strokeOpacity: 0.1
-            };
-          }
+          const slug = feature.getProperty("slug");
+          const color = `#${feature.getProperty("color")}`;
+          const isSelected = this.selectedIds.includes(slug);
+          return {
+            strokeColor: color,
+            strokeOpacity: isSelected ? 1.0 : 0.2,
+            strokeWeight: isSelected ? 3 : 2
+          };
         });
+
         this.landings.setStyle((feature) => {
           var d, ref;
           if (ref = feature.getProperty("id"), indexOf.call((function() {
@@ -62,16 +94,12 @@
             }
             return results;
           })(), ref) >= 0) {
-            return {
-              icon: this.landingIcon()
-            };
+            return { icon: this.landingIcon() };
           } else {
-            return {
-              icon: this.landingIcon(),
-              visible: false
-            };
+            return { icon: this.landingIcon(), visible: false };
           }
         });
+
         return this.boundMap(desc);
       }
 
@@ -101,26 +129,23 @@
         });
         this.landings.setStyle((feature) => {
           var d, ref;
-          if (ref = feature.getProperty("id"), indexOf.call((function() {
+          const visibleIds = (function() {
             var i, len, results;
             results = [];
-            for (i = 0, len = landing_points.length; i < len; i++) {
-              d = landing_points[i];
+            for (i = 0, len = desc.length; i < len; i++) {
+              d = desc[i];
               results.push(d.landing_point_id);
             }
             return results;
-          })(), ref) >= 0) {
-            return {
-              icon: this.landingIcon()
-            };
+          })();
+
+          if (ref = feature.getProperty("id"), indexOf.call(visibleIds, ref) >= 0) {
+            return { icon: this.landingIcon(), visible: true };
           } else {
-            return {
-              icon: this.landingIcon(),
-              visible: false
-            };
+            return { icon: this.landingIcon(), visible: false };
           }
         });
-        return this.boundMap(latlons);
+        return this.boundMap(desc);
       }
 
       selectRfs(data) {
@@ -276,6 +301,7 @@
         this.showCables();
         this.showLandingPoints();
         this.setEvents();
+        this.selectedIds = [];
         return this;
       }
 
