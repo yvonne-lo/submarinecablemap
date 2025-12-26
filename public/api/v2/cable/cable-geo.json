@@ -101,7 +101,6 @@
       },
       "properties": {
         "color": "808080",
-        "dash": [5, 5],
         "slug": "apricot",
         "name": "Apricot",
         "feature_id":"apricot-1"
