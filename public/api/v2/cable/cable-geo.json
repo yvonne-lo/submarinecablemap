@@ -31,7 +31,21 @@
             [124.14876628719325,23.757798070792454],
             [122.84998720785636,24.63495976683041],
             [121.80144795065142,24.863504112487785]
-          ],
+          ]
+        ]
+      },
+      "properties": {
+        "color": "0099ff",
+        "slug": "apricot",
+        "name": "Apricot",
+        "feature_id":"apricot-0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
           [
             [103.64609081207688,1.338585852071497],
             [103.83750067588413,1.182753739294242],
@@ -86,9 +100,11 @@
         ]
       },
       "properties": {
-        "color": "0099ff",
+        "color": "808080",
+        "dash": [5, 5],
         "slug": "apricot",
-        "name": "Apricot"
+        "name": "Apricot",
+        "feature_id":"apricot-1"
       }
     },
     {
