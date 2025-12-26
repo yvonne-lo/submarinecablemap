@@ -14,14 +14,19 @@
       
       renderLandingPointLabels(desc = []) {
         this.lpLabels = this.lpLabels || [];
+        const seen = new Set();
         const mkContent = (name) =>
         `<div class="lp-label" style="background: rgba(255,255,255,0.9);border: 1px solid #ccc;border-radius: 4px;padding: 2px 6px;font-size: 12px;color: #404040;white-space: nowrap;">
            ${name}
         </div>`;
         for (const d of desc) {
+          
+          if (seen.has(d.landing_point_id)) continue;
+          seen.add(d.landing_point_id);
           const [lat, lon] = String(d.latlon).split(',');
           const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lon));
-          const name = d.name || d.landing_point || d.slug || '';
+          const raw = d.name || d.landing_point || d.slug || '';
+          const name = String(raw).trim();
           const box = new InfoBox({
             closeBoxURL: "",
             alignBottom: true,
@@ -33,6 +38,30 @@
           this.lpLabels.push(box);
         }
       }
+      
+      async mergeLandingDescForCables(ids = []) {
+        const unique = new Map();
+
+        for (const slug of ids) {
+          const data = await this.fetchCableDetail(slug);
+          const list = data?.landing_points || data?.desc || [];
+          for (const d of list) {
+            unique.set(d.landing_point_id, d);
+          }
+        }
+
+        return Array.from(unique.values());
+      }
+
+      async fetchCableDetail(slug) {
+        const url = `/api/v2/cable/${slug}.json`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          return {};
+        }
+        return res.json();
+      }
+
 
       landingIcon() {
         return { 
@@ -92,9 +121,10 @@
           map: this.gmap
         });
         this.landings.loadGeoJson(SubmarineCable.Map.landingsGeoJSON);
-        return this.landings.setStyle({
-          icon: this.landingIcon()
-        });
+        return this.landings.setStyle((feature) => ({
+          icon: this.landingIcon(),
+          visible: false
+        }));
       }
 
       
@@ -136,49 +166,39 @@
         return this.boundMap(desc);
       }
 
+      
       selectCountry(cables, landing_points, latlons) {
         this.infoBox.close();
-        this.cables.setStyle((feature) => {
-          var d, ref;
-          if (ref = feature.getProperty("slug"), indexOf.call((function() {
-            var i, len, results;
-            results = [];
-            for (i = 0, len = cables.length; i < len; i++) {
-              d = cables[i];
-              results.push(d.id);
-            }
-            return results;
-          })(), ref) >= 0) {
-            return {
-              strokeColor: `#${feature.getProperty("color")}`,
-              strokeOpacity: 1
-            };
-          } else {
-            return {
-              strokeColor: `#${feature.getProperty("color")}`,
-              strokeOpacity: 0.1
-            };
-          }
-        });
-        this.landings.setStyle((feature) => {
-          var d, ref;
-          const visibleIds = (function() {
-            var i, len, results;
-            results = [];
-            for (i = 0, len = desc.length; i < len; i++) {
-              d = desc[i];
-              results.push(d.landing_point_id);
-            }
-            return results;
-          })();
 
-          if (ref = feature.getProperty("id"), indexOf.call(visibleIds, ref) >= 0) {
-            return { icon: this.landingIcon(), visible: true };
-          } else {
-            return { icon: this.landingIcon(), visible: false };
-          }
+        this.cables.setStyle((feature) => {
+          const slug = feature.getProperty("slug");
+          const isIncluded = (function() {
+            const ids = [];
+            for (let i = 0; i < cables.length; i++) ids.push(cables[i].id);
+            return ids.indexOf(slug) >= 0;
+          })();
+          return {
+            strokeColor: `#${feature.getProperty("color")}`,
+            strokeOpacity: isIncluded ? 1.0 : 0.1
+          };
         });
-        return this.boundMap(desc);
+
+        this.landings.setStyle((feature) => {
+          const visibleIds = (function() {
+            const ids = [];
+            for (let i = 0; i < landing_points.length; i++) {
+              ids.push(landing_points[i].landing_point_id);
+            }
+            return ids;
+          })();
+          const visible = visibleIds.indexOf(feature.getProperty("id")) >= 0;
+          return { icon: this.landingIcon(), visible };
+        });
+  
+        this.clearLandingPointLabels();
+        this.renderLandingPointLabels(landing_points);
+
+        return this.boundMap(latlons);
       }
 
       selectRfs(data) {
@@ -287,7 +307,15 @@
       
       setEvents() {
         google.maps.event.addListener(this.gmap, 'click', (event) => {
-          return jQuery(location).attr('href', "#/");
+          this.selectedIds = [];
+          this._lastDescForLandings = [];
+          this.clearLandingPointLabels();
+          this.cables.setStyle((feature) => ({
+            strokeColor: `#${feature.getProperty("color")}`,
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          }));
+          this.landings.setStyle((feature) => ({ icon: this.landingIcon(), visible: false }));
         });
 
         this.cables.addListener('click', async (event) => {
