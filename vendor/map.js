@@ -4,7 +4,36 @@
   var indexOf = [].indexOf;
 
   SubmarineCable.Map = (function() {
-    class Map {
+    class Map {  
+      clearLandingPointLabels() {
+        if (this.lpLabels && this.lpLabels.length) {
+          this.lpLabels.forEach(box => box.close());
+        }
+        this.lpLabels = [];
+      }
+      
+      renderLandingPointLabels(desc = []) {
+        this.lpLabels = this.lpLabels || [];
+        const mkContent = (name) =>
+        `<div class="lp-label" style="background: rgba(255,255,255,0.9);border: 1px solid #ccc;border-radius: 4px;padding: 2px 6px;font-size: 12px;color: #404040;white-space: nowrap;">
+           ${name}
+        </div>`;
+        for (const d of desc) {
+          const [lat, lon] = String(d.latlon).split(',');
+          const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lon));
+          const name = d.name || d.landing_point || d.slug || '';
+          const box = new InfoBox({
+            closeBoxURL: "",
+            alignBottom: true,
+            pixelOffset: new google.maps.Size(-20, -25),
+            content: mkContent(name),
+            position: latLng
+          });
+          box.open(this.gmap);
+          this.lpLabels.push(box);
+        }
+      }
+
       landingIcon() {
         return { 
           path: google.maps.SymbolPath.CIRCLE,
@@ -34,25 +63,27 @@
         const slug = feature.getProperty("slug");
         const color = `#${feature.getProperty("color")}`;
         const isSelected = this.selectedIds && this.selectedIds.indexOf(slug) >= 0;
-
         return {
-          strokeColor: isSelected ? "#a81120" : color,
-          strokeOpacity: isSelected ? 1 : 0.1,
-          strokeWeight: 2
+          strokeColor: color, 
+          strokeOpacity: isSelected ? 1.0 : 0.2,
+          strokeWeight: isSelected ? 3 : 2
         };
       }
 
  
+      
       refreshStyles() {
         if (this.cables) {
           this.cables.setStyle((feature) => this.cableStrokeStyle(feature));
         }
         if (this.landings && this._lastDescForLandings) {
+          const ids = (this._lastDescForLandings || []).map(d => d.landing_point_id);
           this.landings.setStyle((feature) => {
-            const ids = (this._lastDescForLandings || []).map(d => d.landing_point_id);
             const visible = ids.indexOf(feature.getProperty("id")) >= 0;
             return { icon: this.landingIcon(), visible };
           });
+          this.clearLandingPointLabels();
+          this.renderLandingPointLabels(this._lastDescForLandings);
         }
       }
 
@@ -99,7 +130,9 @@
             return { icon: this.landingIcon(), visible: false };
           }
         });
-
+        this.clearLandingPointLabels();
+        this.renderLandingPointLabels(desc);
+        
         return this.boundMap(desc);
       }
 
@@ -231,6 +264,8 @@
       }
 
       resetMap() {
+        this.selectedIds = [];
+        this.clearLandingPointLabels();
         this.cables.setStyle((feature) => {
           return {
             strokeColor: `#${feature.getProperty("color")}`,
@@ -249,16 +284,38 @@
         this.gmap.setZoom(2);
         return this.gmap.setCenter(new google.maps.LatLng(30.0, -30.0));
       }
-
+      
       setEvents() {
         google.maps.event.addListener(this.gmap, 'click', (event) => {
           return jQuery(location).attr('href', "#/");
         });
-        this.cables.addListener('click', (event) => {
-          return jQuery(location).attr('href', `#/submarine-cable/${event.feature.getProperty('slug')}`);
+
+        this.cables.addListener('click', async (event) => {
+          const slug = event.feature.getProperty('slug');
+          const nativeEvt = event.domEvent || event.originalEvent || {};
+          const isMulti = nativeEvt.metaKey || nativeEvt.ctrlKey;
+
+          if (isMulti) {
+            const set = new Set(this.selectedIds || []);
+            if (set.has(slug)) set.delete(slug); else set.add(slug);
+            const ids = Array.from(set);
+            this.selectedIds = ids;
+
+            const mergedDesc = await this.mergeLandingDescForCables(ids);
+
+            this.selectCable(ids, mergedDesc);
+            return;
+          }
+
+          const ids = [slug];
+          const mergedDesc = await this.mergeLandingDescForCables(ids);
+          this.selectCable(ids, mergedDesc);
+          return;
         });
-        return this.landings.addListener('click', (event) => {
-          return jQuery(location).attr('href', `#/landing-point/${event.feature.getProperty('slug')}`);
+
+        this.landings.addListener('click', (event) => {
+          const lpSlug = event.feature.getProperty('slug');
+          return jQuery(location).attr('href', `#/landing-point/${lpSlug}`);
         });
       }
 
@@ -302,6 +359,7 @@
         this.showLandingPoints();
         this.setEvents();
         this.selectedIds = [];
+        this.lpLabels = [];
         return this;
       }
 
