@@ -4,11 +4,6 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
-    babel: {
-      plugins: [
-        require.resolve('@babel/plugin-proposal-optional-chaining')
-      ]
-    }
     // Add options here
     // fingerprint: {
     //   enabled: true,
