@@ -41,7 +41,6 @@
         this.cables.setStyle((feature) => {
           if (feature.getProperty("slug") === id) {
             return {
-              strokeColor: "#a81120",
               strokeOpacity: 1
             };
           } else {
