@@ -40,7 +40,10 @@
         this.infoBox.close();
         this.cables.setStyle((feature) => {
           if (feature.getProperty("slug") === id) {
+            const isSelected = feature.getProperty("slug") === id;
+            const color = `#${feature.getProperty("color")}`;
             return {
+              strokeColor: color,
               strokeOpacity: 1
             };
           } else {
