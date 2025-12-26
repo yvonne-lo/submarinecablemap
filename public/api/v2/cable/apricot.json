@@ -1,18 +1,19 @@
 {
   "id":"apricot",
   "name":"Apricot",
-  "length":"11,972 km",
   "landing_points":[
-    {"id":"agat-guam","name":"Agat, Guam","country":"Guam","is_tbd":null},
-    {"id":"batam-indonesia","name":"Batam, Indonesia","country":"Indonesia","is_tbd":null},
-    {"id":"tanjung-pakis-indonesia","name":"Tanjung Pakis, Indonesia","country":"Indonesia","is_tbd":null},
-    {"id":"minamiboso-japan","name":"Minamiboso, Japan","country":"Japan","is_tbd":null},
-    {"id":"baler-philippines","name":"Baler, Philippines","country":"Philippines","is_tbd":null},
-    {"id":"davao-philippines","name":"Davao, Philippines","country":"Philippines","is_tbd":null},
-    {"id":"tuas-singapore","name":"Tuas, Singapore","country":"Singapore","is_tbd":null},
-    {"id":"toucheng-taiwan","name":"Toucheng, Taiwan","country":"Taiwan","is_tbd":null}
+    {"landing_point_id":19250,"id":"agat-gu-united-states","name":"Agat, GU, United States","latlon":"13.385310,144.657530","url":"#/landing-point/agat-gu-united-states","is_tbd":"false"},
+    {"landing_point_id":5862,"id":"batam-indonesia","name":"Batam, Indonesia","latlon":"1.134725,103.962501","url":"#/landing-point/batam-indonesia","is_tbd":"false"},
+    {"landing_point_id":9095,"id":"tanjung-pakis-indonesia","name":"Tanjung Pakis, Indonesia","latlon":"-5.981256,107.120897","url":"#/landing-point/tanjung-pakis-indonesia","is_tbd":"false"},
+    {"landing_point_id":16280,"id":"minamiboso-japan","name":"Minamiboso, Japan","latlon":"35.043000,139.840126","url":"#/landing-point/minamiboso-japan","is_tbd":"false"},
+    {"landing_point_id":17677,"id":"baler-philippines","name":"Baler, Philippines","latlon":"15.761529,121.560182","url":"#/landing-point/baler-philippines","is_tbd":"false"},
+    {"landing_point_id":3902,"id":"davao-philippines","name":"Davao, Philippines","latlon":"7.079989,125.612778","url":"#/landing-point/davao-philippines","is_tbd":"false"},
+    {"landing_point_id":5938,"id":"tuas-singapore","name":"Tuas, Singapore","latlon":"1.338656,103.646217","url":"#/landing-point/tuas-singapore","is_tbd":"false"},
+    {"landing_point_id":5981,"id":"toucheng-taiwan","name":"Toucheng, Taiwan","latlon":"24.863593,121.801453","url":"#/landing-point/toucheng-taiwan","is_tbd":"false"}
   ],
+  "length":"11,972 km",
+  "rfs":"2025 Q4",
   "owners":"Chunghwa Telecom, Google, Meta, NTT, PLDT",
-  "suppliers":"SubCom","rfs":"2025 Q4","rfs_year":2025,
-  "is_planned":false,"url":null,"notes":null
+  "url":null,
+  "notes":null}
 }
