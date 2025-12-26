@@ -1,7 +1,7 @@
 /* global SubmarineCable */
 import Component from '@ember/component';
 import { getOwner } from '@ember/application';
-//import $ from 'jquery';
+import $ from 'jquery';
 
 export default Component.extend({
   classNames: ['map-container'],
