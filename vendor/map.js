@@ -15,24 +15,24 @@
       renderLandingPointLabels(desc = []) {
         this.lpLabels = this.lpLabels || [];
         const seen = new Set();
-        const mkContent = (name) =>
-        `<div class="lp-label" style="background: rgba(255,255,255,0.9);border: 1px solid #ccc;border-radius: 4px;padding: 2px 6px;font-size: 12px;color: #404040;white-space: nowrap;">
-           ${name}
-        </div>`;
+        const mkContent = (name) => `<div class="lp-label">${name}</div>`;
         for (const d of desc) {
           
           if (seen.has(d.landing_point_id)) continue;
           seen.add(d.landing_point_id);
-          const [lat, lon] = String(d.latlon).split(',');
-          const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lon));
+          const [latStr, lonStr] = String(d.latlon || '').split(',');
+          const lat = parseFloat(latStr), lon = parseFloat(lonStr);
+          if (!isFinite(lat) || !isFinite(lon)) continue;
+          const latLng = new google.maps.LatLng(lat, lon);
           const raw = d.name || d.landing_point || d.slug || '';
           const name = String(raw).trim();
           const box = new InfoBox({
             closeBoxURL: "",
             alignBottom: true,
-            pixelOffset: new google.maps.Size(-20, -25),
+            pixelOffset: new google.maps.Size(-15, -20),
             content: mkContent(name),
-            position: latLng
+            position: latLng,
+            zIndex: 1000
           });
           box.open(this.gmap);
           this.lpLabels.push(box);
@@ -54,12 +54,13 @@
       }
 
       async fetchCableDetail(slug) {
+        if (this._cableCache.has(slug)) return this._cableCache.get(slug);
         const url = `/api/v2/cable/${slug}.json`;
         const res = await fetch(url);
-        if (!res.ok) {
-          return {};
-        }
-        return res.json();
+        if (!res.ok) return {};
+        const data = await res.json();
+        this._cableCache.set(slug, data);
+        return data;
       }
 
 
@@ -361,6 +362,7 @@
 
       // _gaq.push(['_trackEvent', category, action, label]) if _gaq
       constructor(element, config) {
+        this._cableCache = new Map();
         this.element = element;
         this.config = config;
         this.creation_time = this.config.creation_time;
