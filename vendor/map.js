@@ -63,11 +63,16 @@
           this.boundMap(desc);
         }
         this.infoBox.close();
+        if (this.config && typeof this.config.onSelectionChange === 'function') {
+          this.config.onSelectionChange(Array.from(this.selectedCableSlugs));
+        }
       }
       
       clearSelection() {
         this.selectedCableSlugs.clear();
-        this.cableLandingMap.clear();
+        if (this.cableLandingMap && this.cableLandingMap.clear) {
+          this.cableLandingMap.clear();
+        }
         this.applyCableSelectionStyles();
         this.landings.setStyle({ icon: this.landingIcon(), visible: true });
         this.infoBox.close();
@@ -228,17 +233,20 @@
           return jQuery(location).attr('href', "#/");
         });
         this.cables.addListener('click', (event) => {
-          const slug = event.feature.getProperty('slug');
-          const domEvt = event.domEvent;
-          const multi = domEvt && (domEvt.ctrlKey || domEvt.shiftKey || domEvt.metaKey);
+          const slug = event && event.feature && event.feature.getProperty('slug');
+          const domEvt = (event && event.domEvent) ? event.domEvent : {};
+          const multi = !!(domEvt.ctrlKey || domEvt.shiftKey || domEvt.metaKey);
+          if (!slug) return;
           if (multi) {
             this.selectCable(slug, [], true);
             } else {
             jQuery(location).attr('href', `#/submarine-cable/${slug}`);
           }
         });
-        return this.landings.addListener('click', (event) => {
-          return jQuery(location).attr('href', `#/landing-point/${event.feature.getProperty('slug')}`);
+        this.landings.addListener('click', (event) => {
+          const slug = event && event.feature && event.feature.getProperty('slug');
+          if (!slug) return;
+          jQuery(location).attr('href', `#/landing-point/${slug}`);
         });
       }
 
