@@ -37,45 +37,44 @@
       }
 
       selectCable(id, desc, is_map_clicked = false) {
-        if (this.selectedCableSlugs.has(id)) {
-          this.selectedCableSlugs.delete(id);
-          this.cableLandingMap.delete(id);
-        } else {
-          this.selectedCableSlugs.add(id);
-          if (Array.isArray(desc) && desc.length) {
-            const ids = new Set(desc.map(d => d.landing_point_id));
-            this.cableLandingMap.set(id, ids);
+        this.infoBox.close();
+        this.cables.setStyle((feature) => {
+          if (feature.getProperty("slug") === id) {
+            const isSelected = feature.getProperty("slug") === id;
+            const color = `#${feature.getProperty("color")}`;
+            return {
+              strokeColor: color,
+              strokeOpacity: 1
+            };
+          } else {
+            return {
+              strokeColor: `#${feature.getProperty("color")}`,
+              strokeOpacity: 0.1
+            };
           }
-        }
-        this.applyCableSelectionStyles();
-        const unionLandingIds = new Set();
-        for (const ids of this.cableLandingMap.values()) {
-          ids.forEach(x => unionLandingIds.add(x));
-        }
-        this.landings.setStyle((feature) => {
-          const visible = (unionLandingIds.size === 0) ? true : unionLandingIds.has(feature.getProperty('id'));
-          return {
-            icon: this.landingIcon(),
-            visible
-          };
         });
-        if (Array.isArray(desc) && desc.length) {
-          this.boundMap(desc);
-        }
-        this.infoBox.close();
-        if (this.config && typeof this.config.onSelectionChange === 'function') {
-          this.config.onSelectionChange(Array.from(this.selectedCableSlugs));
-        }
-      }
-      
-      clearSelection() {
-        this.selectedCableSlugs.clear();
-        if (this.cableLandingMap && this.cableLandingMap.clear) {
-          this.cableLandingMap.clear();
-        }
-        this.applyCableSelectionStyles();
-        this.landings.setStyle({ icon: this.landingIcon(), visible: true });
-        this.infoBox.close();
+        this.landings.setStyle((feature) => {
+          var d, ref;
+          if (ref = feature.getProperty("id"), indexOf.call((function() {
+            var i, len, results;
+            results = [];
+            for (i = 0, len = desc.length; i < len; i++) {
+              d = desc[i];
+              results.push(d.landing_point_id);
+            }
+            return results;
+          })(), ref) >= 0) {
+            return {
+              icon: this.landingIcon()
+            };
+          } else {
+            return {
+              icon: this.landingIcon(),
+              visible: false
+            };
+          }
+        });
+        return this.boundMap(desc);
       }
 
       selectCountry(cables, landing_points, latlons) {
@@ -233,20 +232,10 @@
           return jQuery(location).attr('href', "#/");
         });
         this.cables.addListener('click', (event) => {
-          const slug = event && event.feature && event.feature.getProperty('slug');
-          const domEvt = (event && event.domEvent) ? event.domEvent : {};
-          const multi = !!(domEvt.ctrlKey || domEvt.shiftKey || domEvt.metaKey);
-          if (!slug) return;
-          if (multi) {
-            this.selectCable(slug, [], true);
-            } else {
-            jQuery(location).attr('href', `#/submarine-cable/${slug}`);
-          }
+          return jQuery(location).attr('href', `#/submarine-cable/${event.feature.getProperty('slug')}`);
         });
-        this.landings.addListener('click', (event) => {
-          const slug = event && event.feature && event.feature.getProperty('slug');
-          if (!slug) return;
-          jQuery(location).attr('href', `#/landing-point/${slug}`);
+        return this.landings.addListener('click', (event) => {
+          return jQuery(location).attr('href', `#/landing-point/${event.feature.getProperty('slug')}`);
         });
       }
 
@@ -267,8 +256,6 @@
         this.element = element;
         this.config = config;
         this.creation_time = this.config.creation_time;
-        this.selectedCableSlugs = new Set();
-        this.cableLandingMap = new Map();
         this.gmap = new google.maps.Map(document.getElementById(this.element), {
           zoom: this.isMobile() ? 1 : 3,
           maxZoom: 8,
@@ -292,21 +279,6 @@
         this.showLandingPoints();
         this.setEvents();
         return this;
-      }
-      
-      applyCableSelectionStyles() {
-        const selected = this.selectedCableSlugs;
-        this.cables.setStyle((feature) => {
-          const slug = feature.getProperty('slug');
-          const color = `#${feature.getProperty("color")}`;
-          const hasSelection = selected.size > 0;
-          const isSelected = hasSelection ? selected.has(slug) : true;
-          return {
-            strokeColor: color,
-            strokeOpacity: isSelected ? 1 : 0.1,
-            strokeWeight: isSelected ? 3 : 2
-          };
-        });
       }
 
     };
