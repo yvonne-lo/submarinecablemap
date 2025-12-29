@@ -44,12 +44,14 @@
             const color = `#${feature.getProperty("color")}`;
             return {
               strokeColor: color,
-              strokeOpacity: 1
+              strokeOpacity: 1;
+              strokeWeight: 5
             };
           } else {
             return {
               strokeColor: `#${feature.getProperty("color")}`,
-              strokeOpacity: 0.1
+              strokeOpacity: 0.1;
+              strokeWeight: 2
             };
           }
         });
@@ -310,7 +312,7 @@
           return {
             strokeColor: color,
             strokeOpacity: hasSelection ? (isSelected ? 1 : 0.2) : 1,
-            strokeWeight: 2
+            strokeWeight: 5
           };
         });
         // 同步登陸點：只顯示選取海纜相關的登陸點（簡化作法：有選擇就都顯示）
