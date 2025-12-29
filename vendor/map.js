@@ -229,10 +229,28 @@
 
       setEvents() {
         google.maps.event.addListener(this.gmap, 'click', (event) => {
+          if (!event.ctrlKey) {
+            this.selectedCables.clear();
+            this.applyCableStyles();
+          }
           return jQuery(location).attr('href', "#/");
         });
         this.cables.addListener('click', (event) => {
-          return jQuery(location).attr('href', `#/submarine-cable/${event.feature.getProperty('slug')}`);
+          const slug = event.feature.getProperty('slug');
+          if (event.ctrlKey) {
+            if (this.selectedCables.has(slug)) {
+              this.selectedCables.delete(slug);
+            } else {
+              this.selectedCables.add(slug);
+            }
+            this.applyCableStyles();
+            return; 
+          } else {
+            this.selectedCables.clear();
+            this.selectedCables.add(slug);
+            this.applyCableStyles();
+            return jQuery(location).attr('href', `#/submarine-cable/${event.feature.getProperty('slug')}`);
+          }
         });
         return this.landings.addListener('click', (event) => {
           return jQuery(location).attr('href', `#/landing-point/${event.feature.getProperty('slug')}`);
@@ -277,11 +295,30 @@
         });
         this.showCables();
         this.showLandingPoints();
+        this.selectedCables = new Set();
+        this.applyCableStyles = () => {
+          const hasSelection = this.selectedCables.size > 0;
+          this.cables.setStyle((feature) => {
+            const slug = feature.getProperty('slug');
+            const color = `#${feature.getProperty('color')}`;
+            const isSelected = this.selectedCables.has(slug);
+            return {
+              strokeColor: color,
+              strokeOpacity: hasSelection ? (isSelected ? 1 : 0.1) : 1,
+              strokeWeight: isSelected ? 3 : 2
+            };
+          });
+          this.landings.setStyle((feature) => {
+            if (!hasSelection) {
+              return { icon: this.landingIcon() };
+            }
+            const lpId = feature.getProperty('id');
+            return { icon: this.landingIcon() };
+          });
+        };
         this.setEvents();
         return this;
       }
-
-    };
 
     Map.cablesGeoJSON = "/api/v2/cable/cable-geo.json";
 
