@@ -45,7 +45,7 @@
             return {
               strokeColor: color,
               strokeOpacity: 1,
-              strokeWeight: 5
+              strokeWeight: 3
             };
           } else {
             return {
@@ -76,18 +76,6 @@
             };
           }
         });
-        desc.forEach((point) => {
-          const latLng = new google.maps.LatLng(
-            point.latlon.split(',')[0],
-            point.latlon.split(',')[1]
-          );
-          const info = new google.maps.InfoWindow({
-            content: `<div style="font-size:12px;">${point.name}</div>`,
-            position: latLng
-          });
-          info.open(this.gmap);
-        });
-
         return this.boundMap(desc);
       }
 
