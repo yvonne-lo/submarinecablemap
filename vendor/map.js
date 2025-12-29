@@ -50,7 +50,7 @@
           } else {
             return {
               strokeColor: `#${feature.getProperty("color")}`,
-              strokeOpacity: 0.01,
+              strokeOpacity: 0.08,
               strokeWeight: 1
             };
           }
@@ -311,7 +311,7 @@
           const isSelected = this.selectedSlugs.has(slug);
           return {
             strokeColor: color,
-            strokeOpacity: hasSelection ? (isSelected ? 1 : 0.01) : 1,
+            strokeOpacity: hasSelection ? (isSelected ? 1 : 0.08) : 1,
             strokeWeight: 5
           };
         });
