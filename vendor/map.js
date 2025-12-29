@@ -232,7 +232,26 @@
           return jQuery(location).attr('href', "#/");
         });
         this.cables.addListener('click', (event) => {
-          return jQuery(location).attr('href', `#/submarine-cable/${event.feature.getProperty('slug')}`);
+          const dom = event.domEvent || {};
+          const multi = !!(dom.ctrlKey || dom.metaKey);  // Ctrl(Win/Linux) 或 Cmd(macOS)
+          const slug = event.feature.getProperty('slug');
+          
+          if (multi) {
+            // Ctrl/Cmd：切換選取
+            if (this.selectedSlugs.has(slug)) {
+              this.selectedSlugs.delete(slug);
+            } else {
+              this.selectedSlugs.add(slug);
+            }
+            // 只更新樣式，不跳頁
+            this.applyCableSelectionStyle();
+          } else {
+            // 未按 Ctrl/Cmd：只選單一條（或依原本行為跳頁）
+            this.selectedSlugs.clear();
+            this.selectedSlugs.add(slug);
+            this.applyCableSelectionStyle(); 
+            // return jQuery(location).attr('href', `#/submarine-cable/${event.feature.getProperty('slug')}`);
+          }
         });
         return this.landings.addListener('click', (event) => {
           return jQuery(location).attr('href', `#/landing-point/${event.feature.getProperty('slug')}`);
@@ -256,6 +275,7 @@
         this.element = element;
         this.config = config;
         this.creation_time = this.config.creation_time;
+        this.selectedSlugs = new Set();
         this.gmap = new google.maps.Map(document.getElementById(this.element), {
           zoom: this.isMobile() ? 1 : 3,
           maxZoom: 8,
@@ -280,7 +300,27 @@
         this.setEvents();
         return this;
       }
-
+      
+      applyCableSelectionStyle() {
+        const hasSelection = this.selectedSlugs.size > 0;
+        this.cables.setStyle((feature) => {
+          const color = `#${feature.getProperty("color")}`;
+          const slug = feature.getProperty("slug");
+          const isSelected = this.selectedSlugs.has(slug);
+          return {
+            strokeColor: color,
+            strokeOpacity: hasSelection ? (isSelected ? 1 : 0.2) : 1,
+            strokeWeight: 2
+          };
+        });
+        // 同步登陸點：只顯示選取海纜相關的登陸點（簡化作法：有選擇就都顯示）
+        this.landings.setStyle((feature) => {
+          return {
+            icon: this.landingIcon(),
+            visible: true // 若要更嚴格，只在有選擇時顯示，否則可依需求調整
+            };
+        });
+      }
     };
 
     Map.cablesGeoJSON = "/api/v2/cable/cable-geo.json";
