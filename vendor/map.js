@@ -21,7 +21,7 @@
         return this.cables.setStyle((feature) => {
           return {
             strokeColor: `#${feature.getProperty("color")}`,
-            strokeWeight: 2
+            strokeWeight: 3
           };
         });
       }
@@ -45,7 +45,7 @@
             return {
               strokeColor: color,
               strokeOpacity: 1,
-              strokeWeight: 3
+              strokeWeight: 2
             };
           } else {
             return {
@@ -312,7 +312,7 @@
           return {
             strokeColor: color,
             strokeOpacity: hasSelection ? (isSelected ? 1 : 0.08) : 1,
-            strokeWeight: 5
+            strokeWeight: 3
           };
         });
         // 同步登陸點：只顯示選取海纜相關的登陸點（簡化作法：有選擇就都顯示）
