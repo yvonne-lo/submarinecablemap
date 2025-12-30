@@ -1,1 +1,14 @@
-
+{
+  "id":"e2a",
+  "name":"E2A",
+  "landing_points":[
+    {"landing_point_id":5887,"id":"maruyama-japan","name":"Maruyama, Japan","latlon":"35.037629,139.816943","url":"#/landing-point/maruyama-japan","is_tbd":"false"},
+    {"landing_point_id":5981,"id":"toucheng-taiwan","name":"Toucheng, Taiwan","latlon":"24.863593,121.801453","url":"#/landing-point/toucheng-taiwan","is_tbd":"false"},
+    {"landing_point_id":5751,"id":"morro-bay-ca-united-states","name":"Morro Bay, CA, United States","latlon":"35.366681,-120.847203","url":"#/landing-point/morro-bay-ca-united-states","is_tbd":"false"}
+  ],
+  "length":"12,500 km",
+  "rfs":"2029",
+  "owners":"Chunghwa Telecom, SK Broadband, Softbank, Verizon",
+  "url":null,
+  "notes":null
+}
