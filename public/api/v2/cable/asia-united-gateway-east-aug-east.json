@@ -1,1 +1,15 @@
-
+{
+  "id":"asia-united-gateway-east-aug-east",
+  "name":"Asia United Gateway East (AUG East)",
+  "landing_points":[
+    {"landing_point_id":5892,"id":"wada-japan","name":"Wada, Japan","latlon":"35.035850,140.016772","url":"#/landing-point/wada-japan","is_tbd":"false"},
+    {"id":"changi-singapore","name":"Changi, Singapore","url":"#/landing-point/changi-singapore","is_tbd":"false"},
+    {"id":"dawu-taiwan","name":"Dawu, Taiwan","url":"#/landing-point/dawu-taiwan","is_tbd":"false"},
+    {"id":"wujie-taiwan","name":"Wujie, Taiwan","url":"#/landing-point/wujie-taiwan","is_tbd":"false"}
+  ],
+  "length":"8,900 km",
+  "rfs":"2029",
+  "owners":"Amazon Web Services, Arteria, Chunghwa Telecom, Dreamline, Globe Telecom, Microsoft, Singtel, Telekom Malaysia, Unified National Networks (UNN)",
+  "url":null,
+  "notes":null
+}
