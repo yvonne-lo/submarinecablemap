@@ -34204,21 +34204,7 @@
             [
               -179.999813509292,
               42.0792854496911
-            ]
-          ]
-        ]
-      },
-      "properties": {
-        "color": "ffcc00",
-        "slug": "pacific-light-cable-network-plcn"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "MultiLineString",
-        "coordinates": [
-          [
+            ],
             [
               125.999984976368,
               21.0064998451768
