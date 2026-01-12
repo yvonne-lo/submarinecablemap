@@ -38,6 +38,8 @@
   {"url":"/#/ready-for-service/2025","value":"Ready for service in 2025"},
   {"url":"/#/ready-for-service/2026","value":"Ready for service in 2026"},
   {"url":"/#/ready-for-service/2029","value":"Ready for service in 2029"},
+  {"url":"/#/submarine-cable/tpu","value":"TPU"},
+  {"url":"/#/submarine-cable/topaz","value":"Topaz"},
   {"url":"/#/submarine-cable/asia-united-gateway-east-aug-east","value":"Asia United Gateway East (AUG East)"},
   {"url":"/#/submarine-cable/e2a","value":"E2A"},
   {"url":"/#/country/albania","value":"Connected to Albania"},
