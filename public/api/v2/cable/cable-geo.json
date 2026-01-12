@@ -50,6 +50,7 @@
         "color": "3366cc",
         "slug": "tpu",
         "name": "TPU",
+        "feature_id":"tpu-0"
       }
     },
     {
