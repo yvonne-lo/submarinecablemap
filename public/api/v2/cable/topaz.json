@@ -1,0 +1,15 @@
+{
+  "id":"tpu",
+  "name":"TPU",
+  "landing_points":[
+    {"id":"port-alberni-bc-canada","name":"Port Alberni, BC, Canada","url":"#/landing-point/port-alberni-bc-canada","is_tbd":"false"},
+    {"id":"vancouver-bc-canada","name":"Vancouver, BC, Canada","url":"#/landing-point/vancouver-bc-canada","is_tbd":"false"},
+    {"landing_point_id":5883,"id":"shima-japan","name":"Shima, Japan","latlon":"34.336831,136.874391","url":"#/landing-point/shima-japan","is_tbd":"false"},
+    {"id":"takahagi-japan","name":"Takahagi, Japan","url":"#/landing-point/takahagi-japan","is_tbd":"false"}
+  ],
+  "length":"km",
+  "rfs":"2023",
+  "owners":"Google",
+  "url":null,
+  "notes":null
+}
